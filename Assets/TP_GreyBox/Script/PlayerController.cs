@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
 		direction += Input.GetAxisRaw("Horizontal") * Vector3.right;
 		direction += Input.GetAxisRaw("Vertical") * Vector3.forward;
 		direction.Normalize();
-		float finalspeed = speed * (Input.GetKey(KeyCode.LeftControl)? 2 :1); 
+		float finalspeed = speed * (Input.GetKey(KeyCode.LeftControl)? 2.5f :1f); 
 
 		_rigidbody.velocity = direction * finalspeed + Vector3.up * _rigidbody.velocity.y;
 	}
