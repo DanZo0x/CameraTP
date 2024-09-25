@@ -7,28 +7,21 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    public Camera cam;
-    public CameraConfiguration.CameraConf conf;
 
-    #region Singleton Pattern
+    public CameraController Instance;
+
+    public CameraConfiguration.CameraConf _actualConf;
+
     private void Awake()
     {
-        if (cam == null)
-        {
-            Debug.LogWarning("CAM WAS NULL SET TO CAM.MAIN");
-            cam = Camera.main;
-        }
-        else
-        {
-            Debug.LogWarning("CAM'S NOT NULL");
-        }
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
     }
-    #endregion
 
     void ApplyConfiguration()
     {
-        cam.transform.position = conf.GetPosition();
-        cam.transform.rotation = conf.GetRotation();
+        transform.position = _actualConf.GetPosition();
+        transform.rotation = _actualConf.GetRotation();
     }
 
     private void LateUpdate()
