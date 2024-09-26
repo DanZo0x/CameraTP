@@ -7,9 +7,11 @@ public class CamRail : MonoBehaviour
 {
     public bool isLoop = false;
 
-    List<Vector3> Nods = new List<Vector3>();
+    List<Vector3> _nods = new List<Vector3>();
     [SerializeField] float length = 0;
     [SerializeField] float drawBall = 0;
+
+    public List<Vector3> Nods { get => _nods;}
 
     public float GetLenght() => length;
 
