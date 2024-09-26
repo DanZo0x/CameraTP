@@ -49,7 +49,6 @@ public class CameraController : MonoBehaviour
             Mathf.Sin(config.yaw * Mathf.Deg2Rad)) * view.weight;
 
             //pos
-            print(config.GetPosition());
             Possum += config.GetPosition() * view.weight;
 
             Fovsum += config.fov * view.weight;
@@ -61,7 +60,6 @@ public class CameraController : MonoBehaviour
         result.pitch = Vector2.SignedAngle(Vector2.right, Pitchsum);
 
         result.pivot = Possum / weightSum;
-        print(Possum +"  "+ weightSum);
         result.fov = Fovsum / weightSum;
 
         return result;

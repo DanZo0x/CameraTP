@@ -21,9 +21,8 @@ public struct CameraConf
     {
         return Quaternion.Euler(pitch, yaw, roll);
     }
-    public Vector3 GetPosition(bool debug = true)
+    public Vector3 GetPosition()
     {
-        if(debug) Debug.Log(pivot + (GetRotation() * (Vector3.back * distance)));
         return pivot + (GetRotation() * (Vector3.back * distance));
     }
 
@@ -32,7 +31,7 @@ public struct CameraConf
     {
         Gizmos.color = col;
         Gizmos.DrawSphere(pivot, .25f);
-        Vector3 position = GetPosition(true);
+        Vector3 position = GetPosition();
         Gizmos.DrawLine(pivot, position);
         Gizmos.matrix = Matrix4x4.TRS(position, GetRotation(), Vector3.one);
         Gizmos.DrawFrustum(Vector3.zero, fov, 5f, 0.5f, Camera.main.aspect);

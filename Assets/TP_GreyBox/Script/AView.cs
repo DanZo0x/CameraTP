@@ -17,7 +17,7 @@ public abstract class AView : MonoBehaviour
         CameraController.Instance.AddViews(this);
     }
 
-    private void OnDrawGizmos()
+    public virtual void OnDrawGizmos()
     {
         GetConfiguration().DrawGizmos(Color.red);
     }
