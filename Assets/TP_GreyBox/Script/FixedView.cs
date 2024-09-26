@@ -7,9 +7,9 @@ public class FixedView : AView
     public float roll;
     public float fov;
 
+    CameraConf config;
     public override CameraConf GetConfiguration()
     {
-        CameraConf config;
         config.yaw = yaw;
         config.pitch = pitch;
         config.roll = roll;

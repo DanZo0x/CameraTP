@@ -29,7 +29,7 @@ public class FixedFollowView : AView
             }
             if (Mathf.Abs(a - b) < pitchOffsetMax)
             {
-                config.pitch = -Mathf.Asin(dirToPlayer.y);
+                config.pitch = -Mathf.Asin(dirToPlayer.y) * Mathf.Rad2Deg;
             }
 
             config.roll = roll;
