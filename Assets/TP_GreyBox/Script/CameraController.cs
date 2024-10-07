@@ -2,8 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.DeviceSimulation;
 using UnityEngine;
-
+using UnityEngine.Analytics;
 
 public class CameraController : MonoBehaviour
 {
@@ -16,14 +17,16 @@ public class CameraController : MonoBehaviour
     }
 
     public CameraConf _actualConf;
-    
+
     public Transform _player;
     public CameraConf _configCible;
     public CameraConf _configCourante;
 
+    public AView _FollowView;
+
     public List<AView> _activeViews = new List<AView>();
 
-    
+
 
     public void AddViews(AView a) { _activeViews.Add(a); }
     public void RemoveViews(AView a) { _activeViews.Remove(a); }
@@ -41,32 +44,52 @@ public class CameraController : MonoBehaviour
         float Fovsum = 0;
 
         float weightSum = 0;
+        string allAtZero = "";
         foreach (AView view in _activeViews)
         {
-            float distance = Vector3.Distance(_player.position,view.transform.position);
-            float powerOfView = 1 / (distance / (10 - distance));
-            powerOfView = Mathf.Clamp(powerOfView, 0, 10);
+            double distance = Vector3.Distance(_player.position, view.transform.position);
+            double powerOfView = 0;
+            if (distance < 10)
+            {
+                powerOfView = 1 / (distance / (10 - distance));
+                powerOfView = Mathf.Clamp((float)powerOfView, 0, 10);
+            }
+            else
+            {
+                allAtZero += "0";
+                continue;
+            }
 
-            float newWeight = powerOfView * view.weight;
+            allAtZero += "1";
+
+            float newWeight = (float)powerOfView * view.weight;
 
             CameraConf config = view.GetConfiguration();
-            //Roll
+
             Rollsum += new Vector2(Mathf.Cos(config.roll * Mathf.Deg2Rad),
             Mathf.Sin(config.roll * Mathf.Deg2Rad)) * newWeight;
-            //pitch
+
             Pitchsum += new Vector2(Mathf.Cos(config.pitch * Mathf.Deg2Rad),
             Mathf.Sin(config.pitch * Mathf.Deg2Rad)) * newWeight;
-            //yaw
+
             Yawsum += new Vector2(Mathf.Cos(config.yaw * Mathf.Deg2Rad),
             Mathf.Sin(config.yaw * Mathf.Deg2Rad)) * newWeight;
 
-            //pos
             Possum += config.GetPosition() * newWeight;
-
             Fovsum += config.fov * newWeight;
-
             weightSum += newWeight;
         }
+
+        if (!allAtZero.Contains('1'))
+        {
+            _FollowView.gameObject.SetActive(true);
+            return _FollowView.GetConfiguration();
+        }
+        else
+        {
+            _FollowView.gameObject.SetActive(false);
+        }
+
         result.roll = Vector2.SignedAngle(Vector2.right, Rollsum);
         result.yaw = Vector2.SignedAngle(Vector2.right, Yawsum);
         result.pitch = Vector2.SignedAngle(Vector2.right, Pitchsum);

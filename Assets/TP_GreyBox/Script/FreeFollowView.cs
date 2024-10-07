@@ -10,7 +10,7 @@ public class FreeFollowView : AView
     public float yaw;
     public float yawSpeed;
 
-    public Curve c = new Curve(new Vector3(0,2,0), new Vector3(-5, .66f, 0), new Vector3(-4, -.5f, 0), new Vector3(0, -2, 0));
+    Curve c = new Curve(new Vector3(0,2,0), new Vector3(-5, .66f, 0), new Vector3(-4, -.5f, 0), new Vector3(0, -2, 0));
     public float curvePos;
 
     public override CameraConf GetConfiguration()
