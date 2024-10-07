@@ -16,9 +16,14 @@ public class CameraController : MonoBehaviour
     }
 
     public CameraConf _actualConf;
+    
+    public Transform _player;
+    public CameraConf _configCible;
+    public CameraConf _configCourante;
 
     public List<AView> _activeViews = new List<AView>();
 
+    
 
     public void AddViews(AView a) { _activeViews.Add(a); }
     public void RemoveViews(AView a) { _activeViews.Remove(a); }
@@ -32,28 +37,35 @@ public class CameraController : MonoBehaviour
 
         Vector3 Possum = Vector3.zero;
 
+
         float Fovsum = 0;
 
         float weightSum = 0;
         foreach (AView view in _activeViews)
         {
+            float distance = Vector3.Distance(_player.position,view.transform.position);
+            float powerOfView = 1 / (distance / (10 - distance));
+            powerOfView = Mathf.Clamp(powerOfView, 0, 10);
+
+            float newWeight = powerOfView * view.weight;
+
             CameraConf config = view.GetConfiguration();
             //Roll
             Rollsum += new Vector2(Mathf.Cos(config.roll * Mathf.Deg2Rad),
-            Mathf.Sin(config.roll * Mathf.Deg2Rad)) * view.weight;
+            Mathf.Sin(config.roll * Mathf.Deg2Rad)) * newWeight;
             //pitch
             Pitchsum += new Vector2(Mathf.Cos(config.pitch * Mathf.Deg2Rad),
-            Mathf.Sin(config.pitch * Mathf.Deg2Rad)) * view.weight;
+            Mathf.Sin(config.pitch * Mathf.Deg2Rad)) * newWeight;
             //yaw
             Yawsum += new Vector2(Mathf.Cos(config.yaw * Mathf.Deg2Rad),
-            Mathf.Sin(config.yaw * Mathf.Deg2Rad)) * view.weight;
+            Mathf.Sin(config.yaw * Mathf.Deg2Rad)) * newWeight;
 
             //pos
-            Possum += config.GetPosition() * view.weight;
+            Possum += config.GetPosition() * newWeight;
 
-            Fovsum += config.fov * view.weight;
+            Fovsum += config.fov * newWeight;
 
-            weightSum += view.weight;
+            weightSum += newWeight;
         }
         result.roll = Vector2.SignedAngle(Vector2.right, Rollsum);
         result.yaw = Vector2.SignedAngle(Vector2.right, Yawsum);

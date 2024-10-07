@@ -29,6 +29,7 @@ public class FreeFollowView : AView
 
     private void OnDrawGizmos()
     {
+        base.OnDrawGizmos();
         c.DrawGizmos(Color.red, transform.localToWorldMatrix);
     }
 }
