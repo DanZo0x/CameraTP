@@ -4,18 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
-static class MathUtils
-{
-    public static Vector3 GetNearestPointOnSegment(Vector3 a, Vector3 b, Vector3 target)
-    {
-        Vector3 AC = target - a;
-        Vector3 n = (b - a).normalized;
-        float dot = Vector3.Dot(AC, n);
-        dot = Mathf.Clamp(dot, 0, Vector3.Distance(a, b));
-        Vector3 projC = a + n * dot;
-        return projC;
-    }
-}
+
 public class DollyView : AView
 {
     public bool isAuto = false;
