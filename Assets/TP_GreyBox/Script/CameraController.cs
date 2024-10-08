@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.DeviceSimulation;
 using UnityEngine;
 using UnityEngine.Analytics;
 
@@ -18,7 +17,6 @@ public class CameraController : MonoBehaviour
 
     public CameraConf _actualConf;
 
-    public Transform _player;
     public CameraConf _configCible;
     public CameraConf _configCourante;
 
@@ -44,50 +42,22 @@ public class CameraController : MonoBehaviour
         float Fovsum = 0;
 
         float weightSum = 0;
-        string allAtZero = "";
         foreach (AView view in _activeViews)
         {
-            double distance = Vector3.Distance(_player.position, view.transform.position);
-            double powerOfView = 0;
-            if (distance < 10)
-            {
-                powerOfView = 1 / (distance / (10 - distance));
-                powerOfView = Mathf.Clamp((float)powerOfView, 0, 10);
-            }
-            else
-            {
-                allAtZero += "0";
-                continue;
-            }
-
-            allAtZero += "1";
-
-            float newWeight = (float)powerOfView * view.weight;
-
             CameraConf config = view.GetConfiguration();
 
             Rollsum += new Vector2(Mathf.Cos(config.roll * Mathf.Deg2Rad),
-            Mathf.Sin(config.roll * Mathf.Deg2Rad)) * newWeight;
+            Mathf.Sin(config.roll * Mathf.Deg2Rad)) * view.weight;
 
             Pitchsum += new Vector2(Mathf.Cos(config.pitch * Mathf.Deg2Rad),
-            Mathf.Sin(config.pitch * Mathf.Deg2Rad)) * newWeight;
+            Mathf.Sin(config.pitch * Mathf.Deg2Rad)) * view.weight;
 
             Yawsum += new Vector2(Mathf.Cos(config.yaw * Mathf.Deg2Rad),
-            Mathf.Sin(config.yaw * Mathf.Deg2Rad)) * newWeight;
+            Mathf.Sin(config.yaw * Mathf.Deg2Rad)) * view.weight;
 
-            Possum += config.GetPosition() * newWeight;
-            Fovsum += config.fov * newWeight;
-            weightSum += newWeight;
-        }
-
-        if (!allAtZero.Contains('1'))
-        {
-            _FollowView.gameObject.SetActive(true);
-            return _FollowView.GetConfiguration();
-        }
-        else
-        {
-            _FollowView.gameObject.SetActive(false);
+            Possum += config.GetPosition() * view.weight;
+            Fovsum += config.fov * view.weight;
+            weightSum += view.weight;
         }
 
         result.roll = Vector2.SignedAngle(Vector2.right, Rollsum);
