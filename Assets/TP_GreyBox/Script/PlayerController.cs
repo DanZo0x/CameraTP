@@ -12,16 +12,18 @@ public class PlayerController : MonoBehaviour
 	public void Awake()
 	{
 		_rigidbody = GetComponent<Rigidbody>();
-	}
+        Cursor.lockState = CursorLockMode.Locked;
 
-	void FixedUpdate()
+    }
+
+    void FixedUpdate()
     {
 		Vector3 direction = Vector3.zero;
-		direction += Input.GetAxisRaw("Horizontal") * Vector3.right;
-		direction += Input.GetAxisRaw("Vertical") * Vector3.forward;
+		direction += Quaternion.Euler(Camera.main.transform.eulerAngles) * Vector3.right * Input.GetAxisRaw("Horizontal");
+		direction += Quaternion.Euler(Camera.main.transform.eulerAngles) * Vector3.forward * Input.GetAxisRaw("Vertical");
+		direction = new Vector3(direction.x, 0, direction.z); // dafuck ?
 		direction.Normalize();
-		float finalspeed = speed * (Input.GetKey(KeyCode.LeftControl)? 2.5f :1f); 
-
+		float finalspeed = speed * (Input.GetKey(KeyCode.LeftControl)? 2.5f :1f);
 		_rigidbody.velocity = direction * finalspeed + Vector3.up * _rigidbody.velocity.y;
 	}
 }

@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class Curve : MonoBehaviour
 {
-    public Vector3 A;
-    public Vector3 B;
-    public Vector3 C;
-    public Vector3 D;
+    [SerializeField] Vector3 A = Vector3.zero;
+    [SerializeField] Vector3 B = Vector3.zero;
+    [SerializeField] Vector3 C = Vector3.zero;
+    [SerializeField] Vector3 D = Vector3.zero;
 
 
     const float MAX = 32;
@@ -20,7 +20,7 @@ public class Curve : MonoBehaviour
 
     public Vector3 GetPosition(float t)
     {
-        return MathUtils.CubicBezier(A, B, C, D, t);
+        return Quaternion.Euler(transform.eulerAngles) * MathUtils.CubicBezier(A, B, C, D, t) ;
     }
     public Vector3 GetPosition(float t, Matrix4x4 localToWorldMatrix)
     {
@@ -31,10 +31,10 @@ public class Curve : MonoBehaviour
     public void DrawGizmos(Color c, Matrix4x4 localToWorldMatrix)
     {
         Gizmos.color = new Color(.5f, .3f, .7f);
-        Gizmos.DrawSphere(A, .2f);
-        Gizmos.DrawSphere(B, .2f);
-        Gizmos.DrawSphere(C, .2f);
-        Gizmos.DrawSphere(D, .2f);
+        Gizmos.DrawSphere(Quaternion.Euler(transform.eulerAngles) * A + transform.position, .2f);
+        Gizmos.DrawSphere(Quaternion.Euler(transform.eulerAngles) * B + transform.position, .2f);
+        Gizmos.DrawSphere(Quaternion.Euler(transform.eulerAngles) * C + transform.position, .2f);
+        Gizmos.DrawSphere(Quaternion.Euler(transform.eulerAngles) * D + transform.position, .2f);
 
         for (float i = 0; i < MAX; i++)
         {

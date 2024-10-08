@@ -23,6 +23,7 @@ public class DollyView : AView
             if (isAuto)
             {
                 float OldDist = float.MaxValue;
+                Vector3 finalProj = Vector3.zero;
                 for (int i = 0; i < rail.Nods.Count - 1; i++)
                 {
                     Vector3 proj = MathUtils.GetNearestPointOnSegment(rail.Nods[i], rail.Nods[i + 1], Target.position);
@@ -30,9 +31,11 @@ public class DollyView : AView
                     if (dist < OldDist)
                     {
                         OldDist = dist;
-                        config.pivot = proj;
+                        finalProj = proj;
                     }
                 }
+                config.pivot = Vector3.Lerp(config.pivot,finalProj,.02f);
+
             }
             else
             {

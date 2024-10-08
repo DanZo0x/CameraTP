@@ -15,15 +15,15 @@ public class CameraController : MonoBehaviour
         else Destroy(gameObject);
     }
 
+    [Range(0.0f, 1.0f), SerializeField]
+    float smoothTime = .8f;
+
+    [SerializeField] 
+    private List<AView> _activeViews = new();
+    public List<AView> ActiveViews { get => _activeViews; set => _activeViews = value; }
+
+    
     public CameraConf _actualConf;
-
-    public CameraConf _configCible;
-    public CameraConf _configCourante;
-
-    public AView _FollowView;
-
-    public List<AView> _activeViews = new List<AView>();
-
 
 
     public void AddViews(AView a) { _activeViews.Add(a); }
@@ -71,10 +71,10 @@ public class CameraController : MonoBehaviour
     }
     void ApplyConfiguration()
     {
-        transform.position = _actualConf.GetPosition();
-        transform.rotation = _actualConf.GetRotation();
-        Camera.main.fieldOfView = _actualConf.fov;
-
+        transform.position = Vector3.Lerp(transform.position,_actualConf.GetPosition(), smoothTime);
+        transform.rotation = Quaternion.Lerp(transform.rotation, _actualConf.GetRotation(), smoothTime);
+        
+        Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView,_actualConf.fov,smoothTime);
     }
 
     private void LateUpdate()

@@ -1,14 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
 public class AViewVolum : MonoBehaviour
 {
     public int Priority = 0;
-    public AView view;
+    public AView View;
 
-    private int Uid;
+    [SerializeField] private int Uid;
     static int NextUid = 0;
+
+    protected bool IsActive { get; private set; }
 
     public virtual float ComputeSelfWeight()
     {
@@ -16,13 +19,22 @@ public class AViewVolum : MonoBehaviour
     }
     void Awake()
     {
-        Uid = NextUid;
-        NextUid++;
+        Uid = NextUid++;
     }
 
-    // Update is called once per frame
-    void Update()
+    protected void SetActive(bool isActive)
     {
-        
+        IsActive = isActive;
+        if(IsActive) AddVolume(this);
+        else RemoveVolume(this);
+    }
+
+    public virtual void AddVolume(AViewVolum volume)
+    {
+        volume.View.SetActive(true);
+    }
+    public virtual void RemoveVolume(AViewVolum volume)
+    {
+        volume.View.SetActive(false);
     }
 }

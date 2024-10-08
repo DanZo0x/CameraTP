@@ -1,35 +1,49 @@
+using UnityEditor;
 using UnityEngine;
 
 public class FreeFollowView : AView
 {
 
-    public float[] pitch = new float[3];
-    public float[] roll = new float[3];
-    public float[] fov = new float[3];
+    [SerializeField] float[] _pitch = new float[3];
+    [SerializeField] float[] _roll = new float[3];
+    [SerializeField] float[] _fov = new float[3];
+    
+    [SerializeField] float _yaw;
+    [SerializeField] float _yawSpeed;
 
-    public float yaw;
-    public float yawSpeed;
+    [SerializeField] Curve _curve;
+    [SerializeField] float _curvePos;
+    [SerializeField] float _pitchSpeed;
 
-    Curve c = new Curve(new Vector3(0,2,0), new Vector3(-5, .66f, 0), new Vector3(-4, -.5f, 0), new Vector3(0, -2, 0));
-    public float curvePos;
 
     public override CameraConf GetConfiguration()
     {
         CameraConf conf = new CameraConf();
-        conf.yaw = yaw ;
+        conf.yaw = _yaw;
 
-        conf.pitch = pitch[(int)curvePos];
-        conf.roll = roll[(int)curvePos];
-        conf.fov = fov[(int)curvePos];
+        conf.pitch = Mathf.Lerp(_pitch[(int)_curvePos], _pitch[(int)_curvePos + 1], _curvePos % 1);
+        conf.roll = Mathf.Lerp(_roll[(int)_curvePos], _roll[(int)_curvePos + 1], _curvePos % 1);
+        conf.fov = Mathf.Lerp(_fov[(int)_curvePos], _fov[(int)_curvePos + 1], _curvePos % 1);
 
-        conf.pivot = c.GetPosition(curvePos/2) +transform.position;
+        conf.pivot = _curve.GetPosition(_curvePos / 2) + transform.position;
 
         return conf;
+    }
+
+    private void Update()
+    {
+        _curvePos -= Input.GetAxis("Mouse Y") * _pitchSpeed;
+        _curvePos = Mathf.Clamp(_curvePos, 0, 1.9999999f);
+
+        _yaw += Input.GetAxis("Mouse X") * _yawSpeed;
+        _yaw %= 360;
+
+        transform.eulerAngles = new Vector3(0, _yaw, 0);
     }
 
     private void OnDrawGizmos()
     {
         base.OnDrawGizmos();
-        c.DrawGizmos(Color.red, transform.localToWorldMatrix);
+        _curve.DrawGizmos(Color.red, transform.localToWorldMatrix);
     }
 }
