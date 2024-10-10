@@ -1,6 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
+[RequireComponent(typeof(Curve))]
 public class FreeFollowView : AView
 {
 

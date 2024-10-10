@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ViewVolumeBlender
+public class ViewVolumeBlender : MonoBehaviour 
 {
     [SerializeField] List<AViewVolum> _activeViewVolumes = new List<AViewVolum>();
     Dictionary<AView, AViewVolum> _volumesPerViews;
@@ -22,5 +22,11 @@ public class ViewVolumeBlender
         _volumesPerViews.Remove(volume.View);
         volume.View.SetActive(false);
     }
-    
+    private void OnGUI()
+    {
+        foreach (var volume in _activeViewVolumes) 
+        { 
+            GUILayout.Label(volume.View.name);
+        }
+    }
 }
