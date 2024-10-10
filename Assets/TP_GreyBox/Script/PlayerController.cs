@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
 	public void Awake()
 	{
 		_rigidbody = GetComponent<Rigidbody>();
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.lockState = CursorLockMode.Locked;
 
     }
 

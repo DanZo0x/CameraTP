@@ -34,7 +34,7 @@ public class FreeFollowView : AView
     private void Update()
     {
         _curvePos -= Input.GetAxis("Mouse Y") * _pitchSpeed;
-        _curvePos = Mathf.Clamp(_curvePos, 0, 1.9999999f);
+        _curvePos = Mathf.Clamp(_curvePos, 0, _pitch.Length-1.0000001f);
 
         _yaw += Input.GetAxis("Mouse X") * _yawSpeed;
         _yaw %= 360;

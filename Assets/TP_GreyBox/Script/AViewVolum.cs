@@ -8,10 +8,11 @@ public class AViewVolum : MonoBehaviour
     public int Priority = 0;
     public AView View;
 
-    [SerializeField] private int Uid;
+    [SerializeField] private int _uid;
     static int NextUid = 0;
 
     protected bool IsActive { get; private set; }
+    public int Uid { get => _uid; set => _uid = value; }
 
     public virtual float ComputeSelfWeight()
     {
@@ -19,7 +20,7 @@ public class AViewVolum : MonoBehaviour
     }
     void Awake()
     {
-        Uid = NextUid++;
+        _uid = NextUid++;
     }
 
     protected void SetActive(bool isActive)
@@ -31,10 +32,10 @@ public class AViewVolum : MonoBehaviour
 
     public virtual void AddVolume(AViewVolum volume)
     {
-        volume.View.SetActive(true);
+        ViewVolumeBlender.Instance.AddVolume(volume);
     }
     public virtual void RemoveVolume(AViewVolum volume)
     {
-        volume.View.SetActive(false);
+        ViewVolumeBlender.Instance.RemoveVolume(volume);
     }
 }

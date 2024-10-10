@@ -6,14 +6,26 @@ using UnityEngine;
 public class TriggeredViewVolum : AViewVolum
 {
     const string TAG = "Player";
+    bool isTriggered = false;
 
     private void OnTriggerEnter(Collider other)
     {
-        SetActive(true);
+        if(other.transform.CompareTag(TAG)) isTriggered = true;
     }
-
     private void OnTriggerExit(Collider other)
     {
-        SetActive(false);
+        isTriggered = false;
+    }
+    private void Update()
+    {
+        if (isTriggered && !IsActive)
+        {
+            SetActive(true);
+        }
+
+        if (!isTriggered && IsActive)
+        {
+            SetActive(false);
+        }
     }
 }
