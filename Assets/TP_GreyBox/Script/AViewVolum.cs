@@ -11,7 +11,7 @@ public class AViewVolum : MonoBehaviour
     [SerializeField] private int _uid;
     static int NextUid = 0;
 
-    protected bool IsActive { get; private set; }
+    protected bool IsActive { get; set; }
     public int Uid { get => _uid; set => _uid = value; }
 
     public virtual float ComputeSelfWeight()
