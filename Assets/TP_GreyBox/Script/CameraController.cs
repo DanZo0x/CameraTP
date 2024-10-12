@@ -15,7 +15,7 @@ public class CameraController : MonoBehaviour
         else Destroy(gameObject);
     }
 
-    [Range(0.0f, 1.0f), SerializeField]
+    [SerializeField]
     float smoothTime = .8f;
 
     [SerializeField] 
@@ -71,10 +71,10 @@ public class CameraController : MonoBehaviour
     }
     void ApplyConfiguration()
     {
-        transform.position = Vector3.Lerp(transform.position,_actualConf.GetPosition(), smoothTime);
-        transform.rotation = Quaternion.Lerp(transform.rotation, _actualConf.GetRotation(), smoothTime);
+        transform.position = Vector3.Lerp(transform.position,_actualConf.GetPosition(), smoothTime * Time.deltaTime);
+        transform.rotation = Quaternion.Lerp(transform.rotation, _actualConf.GetRotation(), smoothTime * Time.deltaTime);
         
-        Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView,_actualConf.fov,smoothTime);
+        Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView,_actualConf.fov,smoothTime * Time.deltaTime);
     }
 
     private void LateUpdate()
