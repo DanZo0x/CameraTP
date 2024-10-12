@@ -15,8 +15,15 @@ public class CameraController : MonoBehaviour
         else Destroy(gameObject);
     }
 
-    [SerializeField]
-    float smoothTime = .8f;
+    [SerializeField] private float smoothTime = .8f;
+    
+    [SerializeField] private bool bIsCutRequested = false;
+
+    public bool BIsCutRequested
+    {
+        get => bIsCutRequested;
+        set => bIsCutRequested = value;
+    }
 
     [SerializeField] 
     private List<AView> _activeViews = new();
@@ -71,10 +78,19 @@ public class CameraController : MonoBehaviour
     }
     void ApplyConfiguration()
     {
-        transform.position = Vector3.Lerp(transform.position,_actualConf.GetPosition(), smoothTime * Time.deltaTime);
-        transform.rotation = Quaternion.Lerp(transform.rotation, _actualConf.GetRotation(), smoothTime * Time.deltaTime);
-        
-        Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView,_actualConf.fov,smoothTime * Time.deltaTime);
+        if (bIsCutRequested)
+        {
+            transform.position = _actualConf.GetPosition();
+            transform.rotation = _actualConf.GetRotation();
+            Camera.main.fieldOfView = _actualConf.fov;
+
+        }
+        else
+        {
+            transform.position = Vector3.Lerp(transform.position,_actualConf.GetPosition(), smoothTime * Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, _actualConf.GetRotation(), smoothTime * Time.deltaTime);
+            Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView,_actualConf.fov,smoothTime * Time.deltaTime);
+        }
     }
 
     private void LateUpdate()
@@ -82,5 +98,4 @@ public class CameraController : MonoBehaviour
         _actualConf = ComputeAverage();
         ApplyConfiguration();
     }
-
 }

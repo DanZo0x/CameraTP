@@ -11,6 +11,8 @@ public class AViewVolum : MonoBehaviour
     [SerializeField] private int _uid;
     static int NextUid = 0;
 
+    [SerializeField] private bool bIsCutRequested = false;
+
     protected bool IsActive { get; set; }
     public int Uid { get => _uid; set => _uid = value; }
 
@@ -26,8 +28,15 @@ public class AViewVolum : MonoBehaviour
     protected void SetActive(bool isActive)
     {
         IsActive = isActive;
-        if(IsActive) AddVolume(this);
-        else RemoveVolume(this);
+        if (IsActive)
+        {
+            AddVolume(this);
+            CameraController.Instance.BIsCutRequested = bIsCutRequested;
+        }
+        else
+        {
+            RemoveVolume(this);
+        }
     }
 
     public virtual void AddVolume(AViewVolum volume)
