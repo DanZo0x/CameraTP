@@ -31,7 +31,7 @@ public class SphereViewVolume : AViewVolum
 
     public override float ComputeSelfWeight()
     {
-        return distance/outerRadius;
+        return 1 - distance/outerRadius;
     }
     private void OnDrawGizmos()
     {
